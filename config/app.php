@@ -173,11 +173,11 @@ return [
         /*
          * Application Service Providers...
          */
-        App\Providers\AppServiceProvider::class,
-        App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
-        App\Providers\EventServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
+        PayBee\Providers\AppServiceProvider::class,
+        PayBee\Providers\AuthServiceProvider::class,
+        // PayBee\Providers\BroadcastServiceProvider::class,
+        PayBee\Providers\EventServiceProvider::class,
+        PayBee\Providers\RouteServiceProvider::class,
 
     ],
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Providers;
+namespace PayBee\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
