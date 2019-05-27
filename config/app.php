@@ -167,7 +167,8 @@ return [
          * Package Service Providers...
          */
 
-        //
+        \BotMan\BotMan\BotManServiceProvider::class,
+        \BotMan\Drivers\Telegram\Providers\TelegramServiceProvider::class,
 
         /*
          * Application Service Providers...
