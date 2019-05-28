@@ -15,7 +15,7 @@ class BotEndPointTest extends TestCase
      */
     public function testExample()
     {
-        $response = $this->post('/bot', []);
+        $response = $this->post('/api/bot', []);
 
         $response->assertStatus(200);
     }
