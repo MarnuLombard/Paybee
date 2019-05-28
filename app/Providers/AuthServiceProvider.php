@@ -12,7 +12,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        'PayBee\Model' => 'PayBee\Policies\ModelPolicy',
+        // 'PayBee\Model' => 'PayBee\Policies\ModelPolicy',
     ];
 
     /**
