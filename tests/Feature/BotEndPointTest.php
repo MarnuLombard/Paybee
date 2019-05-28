@@ -13,7 +13,7 @@ class BotEndPointTest extends TestCase
      *
      * @return void
      */
-    public function testExample()
+    public function testEndpointResponds()
     {
         $response = $this->post('/api/bot', []);
 
