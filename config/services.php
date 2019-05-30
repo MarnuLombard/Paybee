@@ -35,7 +35,7 @@ return [
     ],
 
     'stripe' => [
-        'model' => \PayBee\User::class,
+        'model' => \PayBee\Models\User::class,
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
         'webhook' => [

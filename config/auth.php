@@ -67,7 +67,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => PayBee\User::class,
+            'model' => \PayBee\Models\User::class,
         ],
 
         // 'users' => [
