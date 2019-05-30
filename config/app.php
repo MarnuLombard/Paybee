@@ -167,10 +167,10 @@ return [
          */
         PayBee\Providers\AppServiceProvider::class,
         PayBee\Providers\AuthServiceProvider::class,
+        PayBee\Providers\BotManMiddlewareServiceProvider::class,
         // PayBee\Providers\BroadcastServiceProvider::class,
         PayBee\Providers\EventServiceProvider::class,
         PayBee\Providers\RouteServiceProvider::class,
-
     ],
 
     /*
