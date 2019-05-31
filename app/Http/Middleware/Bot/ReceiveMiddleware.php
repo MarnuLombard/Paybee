@@ -5,6 +5,8 @@ namespace PayBee\Http\Middleware\Bot;
 use BotMan\BotMan\BotMan;
 use BotMan\BotMan\Interfaces\Middleware\Received;
 use BotMan\BotMan\Messages\Incoming\IncomingMessage;
+use PayBee\Models\Message;
+use PayBee\Models\User;
 
 class ReceiveMiddleware implements Received
 {
@@ -26,7 +28,23 @@ class ReceiveMiddleware implements Received
         // Wrap in a try catch as capturing the data isn't as important as serving the request.
         // Ideally \Log::error() would get pushed to Rollbar, or Sentry or some other direct error management
         try {
-            // Do some Work
+            if (!$message->isFromBot()) {
+                $from = $message->getPayload()->get('from', ['first_name' => null, 'last_name' => null]);
+                $timestamp = $message->getPayload()->get('date', time());
+                $senderId = $message->getSender();
+
+                $user = User::where('sender_id', $senderId)->first();
+
+                Message::create([
+                    'conversation_uuid' => $message->getConversationIdentifier(),
+                    'direction' => Message::DIRECTION_INCOMING,
+                    'user_id' => optional($user)->id,
+                    'sender_id' => $senderId,
+                    'sender_first_name' => $from['first_name'],
+                    'sender_last_name' => $from['last_name'],
+                    'created_at' => date('Y-m-d H:i:s', $timestamp)
+                ]);
+            }
         } catch (\Throwable $e) {
             \Log::error('Error persisting incoming message from Telegram', array_wrap($message->getPayload()));
         }
