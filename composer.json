@@ -9,6 +9,7 @@
         "botman/botman": "^2.5",
         "botman/driver-telegram": "^1.5",
         "fideloper/proxy": "^4.0",
+        "jimmerioles/bitcoin-currency-converter-php": "^0.3.1",
         "laravel/framework": "5.8.*",
         "laravel/tinker": "^1.0",
         "predis/predis": "^1.1"
