@@ -47,9 +47,9 @@ class CurrencyRepository
     public function cacheRate(string $from, string $to, float $rate): void
     {
         \Cache::tags(self::CACHE_TAG)
-            ->put("$from:$to", $rate, now()->endOfDay());
+            ->put("$from:$to", 1/$rate, now()->endOfDay());
         \Cache::tags(self::CACHE_TAG)
-            ->put("$to:$from", 1/$rate, now()->endOfDay());
+            ->put("$to:$from", $rate, now()->endOfDay());
 
         return;
     }
