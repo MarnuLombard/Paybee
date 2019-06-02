@@ -18,7 +18,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         // Bind our crypto currency converter instance into the IOC container
-        $this->app->singleton('\Converter', function (Application $app) {
+        $this->app->when(Converter::class)->give(function (Application $app) {
             return new Converter(new CoinbaseProvider(new Client(), $app->make('cache.store'), 10*60));
         });
 
