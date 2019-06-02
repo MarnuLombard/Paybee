@@ -3,9 +3,17 @@
 namespace PayBee\Bot\Commands;
 
 use BotMan\BotMan\BotMan;
+use PayBee\Repositories\CurrencyRepository;
 
 class BtcCommand implements BotCommand
 {
+    private $currencyRepository;
+
+    public function __construct(CurrencyRepository $currencyRepository)
+    {
+        $this->currencyRepository = $currencyRepository;
+    }
+
     /**
      * All bot commands should have only this method publicly
      * They are to be passed as the second parameter to `BotMan::hears()`
@@ -21,6 +29,11 @@ class BtcCommand implements BotCommand
      */
     public function handle(BotMan $botMan, int $amount = null, string $currency = null): void
     {
-        $botMan->reply("You asked for $amount of $currency to be converted correct?");
+        $converted = $this->currencyRepository->convertCurrency($currency, CurrencyRepository::BITCOIN, $amount);
+        $converted = number_format($converted, 4, '.', '');
+        $rate = $this->currencyRepository->getCachedRate(CurrencyRepository::BITCOIN, $currency);
+        $rate = number_format($rate, 2, '.', '');
+
+        $botMan->reply("$amount $currency is $converted BTC ($rate $currency - 1 BTC)");
     }
 }
