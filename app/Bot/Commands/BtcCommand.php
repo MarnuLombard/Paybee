@@ -22,13 +22,28 @@ class BtcCommand implements BotCommand
      *
      * @param BotMan $botMan
      *
-     * @param int|null $amount
+     * @param float|null $amount
      * @param string|null $currency
      *
      * @return void
      */
-    public function handle(BotMan $botMan, int $amount = null, string $currency = null): void
+    public function handle(BotMan $botMan, $amount = null, $currency = null): void
     {
+        $amount = trim($amount);
+        $currency = trim($currency);
+
+        if (!is_numeric($amount)) {
+            $botMan->reply("Please give a numeric value for the amount eg : /getBTCEquivalent 30 USD");
+
+            return;
+        }
+
+        if (!is_currency_code($currency)) {
+            $botMan->reply("Please give a 3 letter currency code eg : /getBTCEquivalent 30 USD");
+
+            return;
+        }
+
         $converted = $this->currencyRepository->convertCurrency($currency, CurrencyRepository::BITCOIN, $amount);
         $converted = number_format($converted, 4, '.', '');
         $rate = $this->currencyRepository->getCachedRate(CurrencyRepository::BITCOIN, $currency);
