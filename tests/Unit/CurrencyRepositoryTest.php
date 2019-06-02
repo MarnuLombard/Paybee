@@ -19,4 +19,15 @@ class CurrencyRepositoryTest extends TestCase
         $converted = $repo->convertCurrency('ZAR', 'BTC', 3);
         $this->assertIsFloat($converted);
     }
+
+    public function testCurrencyRepositoryCache()
+    {
+        /** @var CurrencyRepository $repo */
+        $repo = app(CurrencyRepository::class);
+
+        $repo->cacheRate('ZAR', 'BTC', 1);
+        $rate = $repo->getCachedValue('ZAR', 'BTC');
+
+        $this->assertEquals($rate, 1);
+    }
 }
