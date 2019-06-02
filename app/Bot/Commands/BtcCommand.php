@@ -45,9 +45,10 @@ class BtcCommand implements BotCommand
         }
 
         $converted = $this->currencyRepository->convertCurrency($currency, CurrencyRepository::BITCOIN, $amount);
-        $converted = number_format($converted, 4, '.', '');
+
+        $converted = round($converted, 4);
         $rate = $this->currencyRepository->getCachedRate(CurrencyRepository::BITCOIN, $currency);
-        $rate = number_format($rate, 2, '.', '');
+        $rate = round($rate, 2);
 
         $botMan->reply("$amount $currency is $converted BTC ($rate $currency - 1 BTC)");
     }
