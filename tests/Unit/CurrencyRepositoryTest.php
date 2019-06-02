@@ -25,8 +25,8 @@ class CurrencyRepositoryTest extends TestCase
         /** @var CurrencyRepository $repo */
         $repo = app(CurrencyRepository::class);
 
-        $repo->cacheRate('ZAR', 'BTC', 1);
-        $rate = $repo->getCachedValue('ZAR', 'BTC');
+        $repo->cacheRate('ZAR', 'BTC', 10);
+        $rate = $repo->getCachedValue('ZAR', 'BTC', 0.1);
 
         $this->assertEquals($rate, 1);
     }
