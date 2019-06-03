@@ -36,6 +36,18 @@ class User extends Authenticatable
         'sender_id' => 'int',
     ];
 
+    public static function findByToken(string $token): ?User
+    {
+        /** @var Token $token */
+        $token = Token::where('token', $token)->first();
+
+        if (!$token) {
+            return null;
+        }
+
+        return $token->user;
+    }
+
     public function messages(): HasMany
     {
         return $this->hasMany(Message::class);
