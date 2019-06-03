@@ -13,9 +13,10 @@ class AddForeignKeysToMessagesTable extends Migration
      */
     public function up()
     {
-        if (env('DB_CONNECTION') === 'sqlite') {
+        if (app()->runningUnitTests()) {
             return;
         }
+
         Schema::table('messages', function (Blueprint $table) {
             $table->foreign('user_id')
                 ->references('id')
@@ -32,7 +33,7 @@ class AddForeignKeysToMessagesTable extends Migration
      */
     public function down()
     {
-        if (env('DB_CONNECTION') === 'sqlite') {
+        if (app()->runningUnitTests()) {
             return;
         }
 
