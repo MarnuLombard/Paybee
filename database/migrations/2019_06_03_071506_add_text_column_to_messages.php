@@ -14,7 +14,7 @@ class AddTextColumnToMessages extends Migration
     public function up()
     {
         Schema::table('messages', function (Blueprint $table) {
-            $table->text('text')->after('sender_last_name');
+            $table->text('text')->after('sender_last_name')->nullable();
         });
     }
 
