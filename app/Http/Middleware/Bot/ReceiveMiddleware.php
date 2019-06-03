@@ -42,6 +42,7 @@ class ReceiveMiddleware implements Received
                     'sender_id' => $senderId,
                     'sender_first_name' => $from['first_name'],
                     'sender_last_name' => $from['last_name'],
+                    'text' => substr($message->getText(), 0, 65535),// 65,535 is the mysql text limit
                     'created_at' => date('Y-m-d H:i:s', $timestamp)
                 ]);
             }
