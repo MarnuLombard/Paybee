@@ -35,7 +35,7 @@ class ReceiveMiddleware implements Received
 
                 $user = User::where('sender_id', $senderId)->first();
 
-                Message::create([
+                $messageRecord = Message::create([
                     'conversation_uuid' => $message->getConversationIdentifier(),
                     'direction' => Message::DIRECTION_INCOMING,
                     'user_id' => optional($user)->id,
@@ -45,6 +45,8 @@ class ReceiveMiddleware implements Received
                     'text' => substr($message->getText(), 0, 65535),// 65,535 is the mysql text limit
                     'created_at' => date('Y-m-d H:i:s', $timestamp)
                 ]);
+
+                $message->addExtras('db_message', $messageRecord);
             }
         } catch (\Throwable $e) {
             \Log::error('Error persisting incoming message from Telegram', array_wrap($message->getPayload()));
