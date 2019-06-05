@@ -4,6 +4,7 @@ namespace PayBee\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -22,6 +23,7 @@ use Illuminate\Support\Collection;
  * @property Carbon                    $updated_at
  * @property Carbon                    $deleted_at
  * @property-read Collection|Message[] $messages
+ * @property-read Token                $token
  */
 class User extends Authenticatable
 {
@@ -46,6 +48,16 @@ class User extends Authenticatable
         }
 
         return $token->user;
+    }
+
+    /**
+     * The structure of the db allows for a one-to-many,
+     * But the app requires us to use it as a one-to-one
+     * A `hasOne` relationship will call `first()` on the Eloquent query
+     */
+    public function token(): HasOne
+    {
+        return $this->hasOne(Token::class);
     }
 
     public function messages(): HasMany
