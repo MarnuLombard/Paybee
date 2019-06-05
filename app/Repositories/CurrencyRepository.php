@@ -25,6 +25,17 @@ class CurrencyRepository
         $this->converter = $converter;
     }
 
+    /**
+     * Get all crypto and fit/ISO4217 currencies we officially support
+     */
+    public static function getCurrencies(): array
+    {
+        $currencies = array_merge(config('currencies.crypto'), config('currencies.ISO4217'));
+        asort($currencies);
+
+        return $currencies;
+    }
+
     public function convertCurrency(string $from = self::BITCOIN, string $to = self::DEFAULT, float $amount = 1.00): float
     {
         try {
