@@ -10,9 +10,10 @@ use Tests\TestCase;
 class ConnectsUsersTest extends TestCase
 {
     /**
-     * Test whether
+     * Test that the user was linked by the bot command
      *
      * @return void
+     * @throws \Exception
      */
     public function testUserConnectionIsStored()
     {
