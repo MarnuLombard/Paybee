@@ -29,34 +29,10 @@ class StoresMessagesTest extends TestCase
      */
     public function testStoresIncomingMessages()
     {
-        $id = $this->faker->numberBetween(1, 20000);
-        $firstName = $this->faker->firstName;
-        $lastName = $this->faker->lastName;
-        $text = $this->faker->text(50);
-        $data = [
-            'update_id' => $this->faker->randomNumber(6),
-            'message' =>
-                [
-                    'message_id' => 106,
-                    'from' =>
-                        [
-                            'id' => $id,
-                            'is_bot' => false,
-                            'first_name' => $firstName,
-                            'last_name' => $lastName,
-                            'language_code' => 'en',
-                        ],
-                    'chat' =>
-                        [
-                            'id' => $id,
-                            'first_name' => $firstName,
-                            'last_name' => $lastName,
-                            'type' => 'private',
-                        ],
-                    'date' => 1559287537,
-                    'text' => $text,
-                ],
-        ];
+        $data = require base_path('tests/Fixtures/TelegramMessage.php');
+        $id = $data['message']['from']['id'];
+        $firstName = $data['message']['chat']['first_name'];
+        $lastName = $data['message']['chat']['last_name'];
 
         // Botman uses `Request::createFromGlobals()` to get the request data
         // Laravel's http testing doesn't perform the actual http request,
