@@ -26,9 +26,12 @@ class ConnectsUsersTest extends TestCase
      */
     public function testUserConnectionIsStored()
     {
+        // We are forced to use the mysql database due to the new http request being posted
+        config()->set('database.default', 'mysql');
+
         /** @var User $user */
         // Use the default connection as that's what we store it in through the framework
-        $user = factory(User::class)->connection('mysql')->create();
+        $user = factory(User::class)->create();
         $data = require base_path('tests/Fixtures/TelegramMessage.php');
         $data['message']['text'] = "/connectAccount {$user->token->token}";
 
@@ -47,7 +50,7 @@ class ConnectsUsersTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertDatabaseHas('users', [
             'sender_id' => $id,
-        ], 'mysql');
+        ]);
 
         // We are forced to use the mysql database due to the new http request being posted
         // Ensure we delete the records we create
