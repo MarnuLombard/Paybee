@@ -3,6 +3,7 @@
 namespace PayBee\Bot\Commands;
 
 use BotMan\BotMan\BotMan;
+use PayBee\Models\Token;
 
 class ConnectCommand implements BotCommand
 {
@@ -19,6 +20,15 @@ class ConnectCommand implements BotCommand
      */
     public function handle(BotMan $botMan, $code = null): void
     {
+        if (!$code || !strlen($code)) {
+            $botMan->reply("Please enter a code to connect your account. You can find it on your dashboard");
+        }
 
+        /** @var Token $token */
+        $token = Token::where('token', $code)->firstOrFail();
+        $user = $token->user;
+
+        $payload = $botMan->getMessage()->getPayload();
+        $user->update(['sender_id' => $payload->get('from')['id']]);
     }
 }
