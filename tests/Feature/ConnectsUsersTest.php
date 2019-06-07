@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use BotMan\BotMan\Http\Curl;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use PayBee\Models\User;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
@@ -31,7 +30,7 @@ class ConnectsUsersTest extends TestCase
         // Use the default connection as that's what we store it in through the framework
         $user = factory(User::class)->connection('mysql')->create();
         $data = require base_path('tests/Fixtures/TelegramMessage.php');
-        $data['message']['text'] = "/connect {$user->token->token}";
+        $data['message']['text'] = "/connectAccount {$user->token->token}";
 
         $id = $data['message']['from']['id'];
 
