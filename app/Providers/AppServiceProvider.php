@@ -13,6 +13,13 @@ use PayBee\Repositories\CurrencyRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
+
+    public function boot()
+    {
+        // Bind our listener/s for eloquent events
+        User::observe(UserObserver::class);
+    }
+
     /**
      * Register any application services.
      *
@@ -27,8 +34,5 @@ class AppServiceProvider extends ServiceProvider
             ->give(function (Application $app) {
                 return new Converter(new CoinbaseProvider(new Client(), $app->make('cache.store'), 10*60));
             });
-
-        // Bind our listener/s for eloquent events
-        User::observe(UserObserver::class);
     }
 }
