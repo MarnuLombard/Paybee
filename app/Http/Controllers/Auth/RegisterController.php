@@ -3,11 +3,9 @@
 namespace PayBee\Http\Controllers\Auth;
 
 use Illuminate\Foundation\Auth\RegistersUsers;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use PayBee\Http\Controllers\Controller;
-use PayBee\Models\Token;
 use PayBee\Models\User;
 use PayBee\Repositories\CurrencyRepository;
 
@@ -74,17 +72,4 @@ class RegisterController extends Controller
             'default_currency' => CurrencyRepository::DEFAULT,
         ]);
     }
-
-    /**
-     * @param Request $request
-     * @param User    $user
-     *
-     * @throws \ErrorException
-     */
-    protected function registered(Request $request, $user)
-    {
-        $token = Token::forUser($user);
-        $user->setRelation('token', $token);// we won't need to re-query for this further
-    }
-
 }

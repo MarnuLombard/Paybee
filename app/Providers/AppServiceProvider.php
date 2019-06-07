@@ -7,6 +7,8 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Jimmerioles\BitcoinCurrencyConverter\Converter;
 use Jimmerioles\BitcoinCurrencyConverter\Provider\CoinbaseProvider;
+use PayBee\Models\User;
+use PayBee\Observers\UserObserver;
 use PayBee\Repositories\CurrencyRepository;
 
 class AppServiceProvider extends ServiceProvider
@@ -26,5 +28,7 @@ class AppServiceProvider extends ServiceProvider
                 return new Converter(new CoinbaseProvider(new Client(), $app->make('cache.store'), 10*60));
             });
 
+        // Bind our listener/s for eloquent events
+        User::observe(UserObserver::class);
     }
 }
