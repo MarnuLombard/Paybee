@@ -9,16 +9,6 @@ use Tests\TestCase;
 
 class ConnectsUsersTest extends TestCase
 {
-
-    use DatabaseMigrations;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->runDatabaseMigrations();
-        $this->seed(\UsersTableSeeder::class);
-    }
-
     /**
      * Test whether
      *
