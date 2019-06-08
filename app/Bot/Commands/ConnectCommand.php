@@ -22,6 +22,8 @@ class ConnectCommand implements BotCommand
     {
         if (!$code || !strlen($code)) {
             $botMan->reply("Please enter a code to connect your account. You can find it on your dashboard");
+
+            return;
         }
 
         /** @var Token $token */
@@ -30,5 +32,7 @@ class ConnectCommand implements BotCommand
 
         $payload = $botMan->getMessage()->getPayload();
         $user->update(['sender_id' => $payload->get('from')['id']]);
+
+        $botMan->reply("Account for {$user->email} connected.");
     }
 }
