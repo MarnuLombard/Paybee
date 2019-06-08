@@ -3,6 +3,7 @@
 namespace PayBee\Bot\Commands;
 
 use BotMan\BotMan\BotMan;
+use PayBee\Models\User;
 
 class UserIdCommand implements BotCommand
 {
@@ -18,6 +19,23 @@ class UserIdCommand implements BotCommand
      */
     public function handle(BotMan $botMan): void
     {
+        $payload = $botMan->getMessage()->getPayload();
+        $senderId = $payload->get('from')['id'];
 
+        $user = User::where('sender_id', $senderId)->first();
+
+        if (!$user) {
+            $message = sprintf(
+                'We can\'t find a registered user for you. Please register at %s, and see your token on your dashboard. Connect using the %s command.',
+                route('register'),
+                '/connectAccount'
+            );
+
+            $botMan->reply($message);
+
+            return;
+        }
+
+        $botMan->reply("Your user id is {$user->id}.");
     }
 }
