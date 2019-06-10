@@ -85,9 +85,12 @@ $ git clone git@bitbucket.org:marnulombard/paybee-infrastructure.git \
 
 * Clone the Application git repository
 ```bash
-$ sudo mkdir /var/www \
-  && chown -R $(whoami):$(id -gn)   && chown -R $(whoami):$(id -gn) \
-  && git clone git@bitbucket.org:marnulombard/paybee.git /var/www/paybee
+$ git clone git@bitbucket.org:marnulombard/paybee.git nginx/www/
+```
+* Get the ssl certificates  
+<small>_We have a chicken and egg situation, we can't start nginx without ssl certs, but we can't get the ssl certs without starting nginx. This script will create a dummy cert, start up the container and then request a letsencrypt cert for us_</small>
+```bash
+$ ./init-letsencrypt.sh
 ```
 
 * Start up the containers
@@ -97,4 +100,4 @@ $ docker-compose start
 # send the process to the background:
 $ docker-compose start -d
 ```
-**Please note the current infrastructure does a ssl certificate install for [paybee.co.za](https://paybee.co.za) - so without modifications to `nginx/start.sh` this step may fail**
+**Please note the current infrastructure does a ssl certificate install for [paybee.co.za](https://paybee.co.za) - so without modifications this step may fail**
