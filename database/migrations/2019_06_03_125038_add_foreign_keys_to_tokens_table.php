@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddForeignKeysToMessagesTable extends Migration
+class AddForeignKeysToTokensTable extends Migration
 {
     /**
      * Run the migrations.
@@ -17,12 +17,12 @@ class AddForeignKeysToMessagesTable extends Migration
             return;
         }
 
-        Schema::table('messages', function (Blueprint $table) {
+        Schema::table('tokens', function (Blueprint $table) {
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
-                ->onUpdate('RESTRICT')
-                ->onDelete('RESTRICT');
+                ->onDelete('RESTRICT')
+                ->onUpdate('RESTRICT');
         });
     }
 
@@ -37,8 +37,8 @@ class AddForeignKeysToMessagesTable extends Migration
             return;
         }
 
-        Schema::table('messages', function (Blueprint $table) {
-            $table->dropForeign('messages_user_id_foreign');
+        Schema::table('tokens', function (Blueprint $table) {
+            $table->dropForeign('tokens_user_id_foreign');
         });
     }
 }

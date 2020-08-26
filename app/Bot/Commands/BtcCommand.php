@@ -32,14 +32,16 @@ class BtcCommand implements BotCommand
         $amount = trim($amount);
         $currency = trim($currency);
 
+        $message = $botMan->getMessage()->getExtras('db_message');
+
         if (!is_numeric($amount)) {
-            $botMan->reply("Please give a numeric value for the amount eg : /getBTCEquivalent 30 USD");
+            $botMan->reply("Please give a numeric value for the amount eg : /getBTCEquivalent 30 USD", compact('message'));
 
             return;
         }
 
         if (!is_currency_code($currency)) {
-            $botMan->reply("Please give a 3 letter currency code eg : /getBTCEquivalent 30 USD");
+            $botMan->reply("Please give a 3 letter currency code eg : /getBTCEquivalent 30 USD", compact('message'));
 
             return;
         }
@@ -50,6 +52,6 @@ class BtcCommand implements BotCommand
         $rate = $this->currencyRepository->getCachedRate(CurrencyRepository::BITCOIN, $currency);
         $rate = round($rate, 2);
 
-        $botMan->reply("$amount $currency is $converted BTC ($rate $currency - 1 BTC)");
+        $botMan->reply("$amount $currency is $converted BTC ($rate $currency - 1 BTC)", compact('message'));
     }
 }
