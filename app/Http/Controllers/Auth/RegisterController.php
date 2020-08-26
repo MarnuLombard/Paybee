@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use PayBee\Http\Controllers\Controller;
 use PayBee\Models\User;
+use PayBee\Repositories\CurrencyRepository;
 
 class RegisterController extends Controller
 {
@@ -60,7 +61,7 @@ class RegisterController extends Controller
      *
      * @param  array  $data
      *
-     * @return \PayBee\Models\User
+     * @return User
      */
     protected function create(array $data)
     {
@@ -68,6 +69,7 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'default_currency' => CurrencyRepository::DEFAULT,
         ]);
     }
 }
