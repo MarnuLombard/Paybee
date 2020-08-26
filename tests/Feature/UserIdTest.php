@@ -3,36 +3,25 @@
 namespace Tests\Feature;
 
 use BotMan\BotMan\Http\Curl;
-use Illuminate\Foundation\Testing\Concerns\InteractsWithDatabase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\WithFaker;
+use PayBee\Models\User;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
-class StoresMessagesTest extends TestCase
+class UserIdTest extends TestCase
 {
-    use DatabaseMigrations;
-    use InteractsWithDatabase;
-    use WithFaker;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->runDatabaseMigrations();
-        $this->seed(\UsersTableSeeder::class);
-    }
-
     /**
-     * Are the messages that come in stored
+     * Unfortunately because Telegram clients push to their
+     * server instead of serving the info in a response,
+     * We really can't test the content of this, just that it doesn't error out
      *
      * @return void
      */
-    public function testStoresIncomingMessages()
+    public function testUserIdEndpoint()
     {
+        /** @var User $user */
+        // Use the default connection as that's what we store it in through the framework
         $data = require base_path('tests/Fixtures/TelegramMessage.php');
-        $id = $data['message']['from']['id'];
-        $firstName = $data['message']['chat']['first_name'];
-        $lastName = $data['message']['chat']['last_name'];
+        $data['message']['text'] = "/getUserId";
 
         // Botman uses `Request::createFromGlobals()` to get the request data
         // Laravel's http testing doesn't perform the actual http request,
@@ -45,10 +34,5 @@ class StoresMessagesTest extends TestCase
         $response = (new Curl())->post(url('/api/bot'), [], $data, ['Content-type' => 'application/json'], true);
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertDatabaseHas('messages', [
-            'sender_id' => $id,
-            'sender_first_name' => $firstName,
-            'sender_last_name' => $lastName,
-        ], 'mysql');
     }
 }
