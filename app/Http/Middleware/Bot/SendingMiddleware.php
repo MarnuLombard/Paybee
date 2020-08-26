@@ -4,6 +4,7 @@ namespace PayBee\Http\Middleware\Bot;
 
 use BotMan\BotMan\BotMan;
 use BotMan\BotMan\Interfaces\Middleware\Sending;
+use PayBee\Models\Message;
 
 class SendingMiddleware implements Sending
 {
@@ -26,9 +27,17 @@ class SendingMiddleware implements Sending
         // Wrap in a try catch as capturing the data isn't as important as serving the request.
         // Ideally \Log::error() would get pushed to Rollbar, or Sentry or some other direct error management
         try {
-            // Do some Work
+            /** @var Message $message */
+            ['text' => $text, 'message' => $message] = $payload;
+
+            $message->replicate(['direction', 'text'])
+                ->fill([
+                    'direction' => Message::DIRECTION_OUTGOING,
+                    'text' => $text,
+                ])
+                ->save();
         } catch (\Throwable $e) {
-            \Log::error('Error persisting incoming message from Telegram', array_wrap(method_exists($payload, 'getPayload') ? $payload->getPayload() : $payload));
+            \Log::error('Error persisting outgoing message from Telegram', array_wrap(method_exists($payload, 'getPayload') ? $payload->getPayload() : $payload));
         }
 
         return $next($payload);
