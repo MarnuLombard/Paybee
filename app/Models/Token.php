@@ -24,7 +24,11 @@ class Token extends Model
             throw new \ErrorException("A user must be saved before generating a token for them");
         }
 
-        $token = \Hash::make($user->id.$user->email);
+        if (self::where('user_id', $user->id)->exists()) {
+            return self::where('user_id', $user->id)->first();
+        }
+
+        $token = sha1($user->id.$user->email);
 
         return self::create([
             'token' => $token,

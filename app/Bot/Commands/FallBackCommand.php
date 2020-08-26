@@ -22,6 +22,13 @@ class FallBackCommand implements BotCommand
         /** @var IncomingMessage $message */
         $message = $botMan->getMessage();
         $message->getPayload();
-        $botMan->reply("\"{$message->getText()}\" is not a valid command. \nValid command are:\n/getBTCEquivalent {amount} {currency-code} (eg /getBTCEquivalent 1 ETH)\n/getUserId");
+        $replyText = sprintf(
+            "\"{$message->getText()}\" is not a valid command. \nValid command are:\n".
+            str_repeat("%s\n", 3), // 3 commands
+            '/getBTCEquivalent {amount} {currency-code} (eg /getBTCEquivalent 1 ETH)',
+            '/connectAccount {token}',
+            '/getUserId'
+        );
+        $botMan->reply($replyText);
     }
 }
