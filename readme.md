@@ -1,68 +1,103 @@
-# Your task
+# PayBee Bot
+ _This guide assumes a Debian 9 host_
+## Host setup
+**SET UP THE REPOSITORY**
 
-You're starting with a new laravel project.
-Implement a [Telegram](https://www.telegram.org/) bot which accesses an external api to get data and which outputs this data on request to a telegram channel.
+* Update the apt package index:
+```bash
+$ sudo apt-get update
+```
+* Install packages to allow apt to use a repository over HTTPS:
+```bash
+$ sudo apt-get install \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg2 \
+    software-properties-common
+```
 
-* add telegram bot with the help of [Telegram API](https://core.telegram.org/api)
-* create a restricted frontend site to configure the bot
+* Add Docker’s official GPG key:
+```bash
+$ curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+```
+* Add the repo to your sources
+```bash
+$ sudo add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/debian \
+   $(lsb_release -cs) \
+   stable"
+```
+<hr>
 
-## The bot 
+**INSTALL DOCKER**
 
-The bot only needs to offer two commands. 
+* Update apt repos
+```bash
+$ sudo apt-get update
+```
 
-The first command should fetch the current BTC rate from [Coindesk](http://www.coindesk.com/api/) and display the BTC equivalent for a given amount to the user in the chat.
+* Install Docker and containerd
+```bash
+$ sudo apt-get install docker-ce docker-ce-cli containerd.io
+```
 
-The currency can be chosen by the user.
+* Verify that everything installed okay
+```bash
+$ sudo docker run hello-world
+```
 
-Example call:
-    
-    /getBTCEquivalent 30 USD
+<hr> 
 
-Example response:
+**INSTALL DOCKER-COMPOSE**  
+*Latest version at time of writing is 1.24.0, substitute that if needed*  
 
-    30 USD is 0.08 BTC (760.45 USD - 1 BTC)
-    
-If no currency is given the default currency should be used.
+```bash
+sudo curl -L "https://github.com/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose \
+  && sudo chmod +x /usr/local/bin/docker-compose
+```
 
+<hr>
 
-The second command should return the paybee user_id of the user.
+**CONFIGURING THE PROJECT**  
 
-This requires some sort of linking process between the paybee-user and the telegram-user when the bot is initially started.
+* Edit your env file to reflect your current environment
+```bash
+$ cp .env.example .env \
+    && vim .env
+```
 
-Example call:
-    
-    /getUserID
-    
-Example response:
+* Ensure that the following values match
+```dotenv
+DB_HOST=mariadb
+REDIS_HOST=redis
+```
 
-    2
+<hr>
 
+**GET THE PROJECT RUNNING**
 
-## The frontend component
+* Clone the infrastructure git repository
+```bash
+$ git clone git@bitbucket.org:marnulombard/paybee-infrastructure.git \
+  && cd paybee-infrastructure
+```
 
-The url
+* Clone the Application git repository
+```bash
+$ git clone git@bitbucket.org:marnulombard/paybee.git nginx/www/
+```
+* Get the ssl certificates  
+<small>_We have a chicken and egg situation, we can't start nginx without ssl certs, but we can't get the ssl certs without starting nginx. This script will create a dummy cert, start up the container and then request a letsencrypt cert for us_</small>
+```bash
+$ ./init-letsencrypt.sh
+```
 
-    bot-config
-    
-should show a restricted site which lets the logged in user define the following things:
-
-* default currency of the bot
-* all settings for the bot you think should be settable by the user
-
-Also this site should show if a telegram account is already linked to the user account.
-
-If yes, then show the telegram-id or phone number of the user.
-
-If not, then show the user what's  needed to link his paybee account to his telegram account.
-
-
-
-## General
-Use the laravel default authentication to setup a restricted site.
-
-Use migrations for creating database tables.
-
-Use bootstrap for the frontend site.
-
-The useage of third party plugins is allowed.
-
+* Start up the containers
+```bash
+$ docker-compose start
+# Or if you are confident that it will start without errors, 
+# send the process to the background:
+$ docker-compose start -d
+```
+**Please note the current infrastructure does a ssl certificate install for [paybee.co.za](https://paybee.co.za) - so without modifications this step may fail**
